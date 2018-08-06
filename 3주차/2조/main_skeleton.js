@@ -263,6 +263,9 @@ function getOnlineUser(){
                 // 입장 인원을 WEB에 보여준다.
                 var onlineUser = Object.keys(snap.val()).length;
                 setOnlineNumber(onlineUser);
+                // TODO :: 로그인한 사람의 닉네임을 알려준다.
+                // var userNickname = loginUser;
+                // showNewUser(userNickname);
             },
             function(error){
                 console.log(error);

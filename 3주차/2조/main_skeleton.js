@@ -185,11 +185,12 @@ function onlineCheck(){
 
                 // DB에서 UsersConnection/ 이후의 새로운 데이터 추가를 감지한다.
                 UsersConnectionAddListenner();
+               
             });
 
             // 해당 사용자의 connection이 끊어지면 false로 변경시켜준다.
             myConnectionsRef.onDisconnect().set(false);
-
+            
         }
     })
 }
@@ -225,6 +226,8 @@ function UsersConnectionChangeListenner(){
         function(snap){
             // 데이터의 변화가 감지되면 현재 입장한 사용자 데이터를 업데이트한다.
             getOnlineUser();
+            console.log(Object.keys(snap.val()).length);
+          
         },
         function(error){
             console.log(error);
@@ -242,6 +245,7 @@ function UsersConnectionAddListenner(){
         function(snap){
             // 새로운 데이터가 추가되면 현재 입장한 사용자 데이터를 업데이트한다.
             getOnlineUser();
+           
         },
         function(error){
             console.log(error);
@@ -289,10 +293,10 @@ function sendText(){
 
         // 채팅 내용을 공백으로 변경 초기화
         $("#input-chat").val("");
-        disableTextSend();
+        
         // 전송이 불가능하도록 변경
         // TODO :: 전송이 불가능하도록 전송 버튼을 비활성화 한다.
-
+        disableTextSend();
     }
 }
 
@@ -323,9 +327,9 @@ $("#input-chat").keypress(function(event){
         if(!event.shiftKey){
             // shift가 함께 입력되지 않았으면 채팅 전송이 이루어진다.
             event.preventDefault();
-            sendText();
+            
             // TODO :: 채팅 내용을 전송한다.
-
+            sendText();
         }
     }else{
         if(getInputChat().length > 0){

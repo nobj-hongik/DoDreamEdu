@@ -30,20 +30,24 @@ $('.kakao-login').keyup(function(event){
         // Enter 이 외 입력 시 실행
         // 로그인 실패 문구 제거
         // TODO :: 에러문구를 제거한다.
+        hideErrorLog();
 
 
         if(getPassword().length > 5){
             // 비밀번호가 6글자 이상일 경우 색상을 로그인 가능하도록 변경
             // TODO :: 로그인 버튼 색상을 로그인 가능하도록 변경
+            enableLogin();
             
         }else{
             // 비밀번호가 6글자 미만일 경우 색상을 로그인 불가능하도록 변경
             // TODO :: 로그인 버튼 색상을 로그인 불가능하도록 변경
+            disableLogin();
             
         }
     }
 });
 
+// jjuya
 // 회원가입을 진행한다.
 function signup(){
     // 로딩을 띄운다.
@@ -51,8 +55,8 @@ function signup(){
     // 회원가입할 이메일과 비밀번호를 통해 회원가입을 진행한다.
 
     // TODO :: createUserWithEmailAndPassword의 인자로 전달 할 Email과 Password의 값을 가져온다.
-    var email = ""
-    var pwd = ""
+    var email = getEmail();
+    var pwd = getPassword();
 
     firebase.auth().createUserWithEmailAndPassword(email, pwd)
     .then(
@@ -70,17 +74,23 @@ function signup(){
             if(error.code == "auth/email-already-in-use"){
                 // 이미 해당 회원이 있으면 로그인을 진행한다.
                 // TODO :: 로그인 함수를 실행한다(email, pwd 함께 전달).
-                
+
+                signin(email, pwd);
+
                 return;
             }else if(error.code == "auth/invalid-email"){
                 // 사용불가능한 이메일일 경우 발생한다.
                 // 에러문구 발생
                 // TODO :: 에러문구를 보이도록 한다.
+
+                alert("잘못된 이메일 입니다.");
                 
             }else if(error.code == "auth/weak-password"){
                 // 사용불가능한 비밀번호일 경우 발생한다.
                 // 에러문구 발생
                 // TODO :: 에러문구를 보이도록 한다.
+
+                alert("잘못된 비밀번호 입니다.");
                 
             }
             // 로딩을 제거한다.
@@ -88,7 +98,7 @@ function signup(){
         }
     )
 }
-
+//hengmo_modify
 // 로그인을 진행한다.
 function signin(email, pwd){
     firebase.auth().signInWithEmailAndPassword(email, pwd)
@@ -99,7 +109,7 @@ function signin(email, pwd){
         function(error){
             // 로그인에 실패할 경우 발생
             // TODO :: 에러문구를 보이도록 한다.
-
+            console.log(error);
 
             // 로딩을 제거한다.
             hideLoading();
@@ -114,7 +124,7 @@ $("#login-btn").click(
             // 로그인 활성화 시 실행
 
             // TODO :: 회원가입을 실행한다.
-            
+            signup();
         }
     }
 )
@@ -208,6 +218,7 @@ function chatDBListenner(){
 
             // 다란 사용자의 채팅을 WEB에 보여준다.
             // TODO :: 다른 사용자의 채팅 내용을 말풍선으로 보이도록 한다.
+            makeOtherChat(receiveChatData.nickName, receiveChatData.contents); // 준혁
             // receiveChatData.nickName 에 다른 사용자의 닉네임이 담겨있음.
             // receiveChatData.contents 에 다른 사용자의 채팅 내용이 담겨있음.
 
@@ -292,7 +303,7 @@ function sendText(){
 
         // 전송이 불가능하도록 변경
         // TODO :: 전송이 불가능하도록 전송 버튼을 비활성화 한다.
-        
+        disableTextSend();
     }
 }
 
@@ -302,17 +313,18 @@ $("#input-chat").keyup(function(event){
         // Backspace 입력 시 글자수가 없으면 전송이 불가능하도록 변경
         if(getInputChat().length <= 1){
             // TODO :: 전송이 불가능하도록 전송 버튼을 비활성화 한다.
-            
+            disableTextSend();
         }
     }else{
         // Backspace 입력 시 글자수가 있으면 전송이 가능하도록 변경
         if(getInputChat().length > 0){
             // TODO :: 전송이 가능하도록 전송 버튼을 활성화 한다.
-            
+            enableTextSend();
         }
     }
 })
 
+//jjuya
 // 채팅창에서 키보드 입력을 컨트롤 한다.
 $("#input-chat").keypress(function(event){
 
@@ -325,17 +337,19 @@ $("#input-chat").keypress(function(event){
             event.preventDefault();
 
             // TODO :: 채팅 내용을 전송한다.
+            sendText();
             
         }
     }else{
         if(getInputChat().length > 0){
             // 채팅 입력 시 글자수가 있으면 전송이 가능하도록 변경
             // TODO :: 전송이 가능하도록 전송 버튼을 활성화 한다.
+            enableTextSend();
             
         }else{
             // 채팅 입력 시 글자수가 없으면 전송이 불가능하도록 변경
             // TODO :: 전송이 불가능하도록 전송 버튼을 비활성화 한다.
-            
+            disableTextSend();
         }
     }
 })
@@ -345,10 +359,11 @@ $("#text-send").click(
     function(){
         // 채팅 데이터 전송
         // TODO :: 채팅 내용을 전송한다.
+        sendText();
 
     }
 )
-
+//hengmo
 // 채팅 내용을 DB에 업로드 한다.
 function upLoadChat(contents){
     // 닉네임과 함께 데이터를 저장하기 위해 닉네임을 얻은 후 실행한다.
@@ -368,7 +383,7 @@ function upLoadChat(contents){
     // 채팅 내용을 WEB에 보여준다.
     // TODO :: 자신의 채팅 내용을 말풍선으로 보이도록 한다.
     // contents 에 자신의 채팅 내용이 담겨있음.
-    
+    makeMyChat(contents);
 }
 
 // 수정 버튼 클릭시 실행

@@ -140,6 +140,19 @@ function setOnlineNumber(onlineNum){
     $("#online-num").text(onlineNum);
 }
 
+// 입장하는 사람의 닉네임을 보여준다.
+function showNewUser(){
+  $("#chat-contents-wrapper").append(
+      "<div>"+
+          "<div class='my-chat'>"+
+              "<pre class='my-chat-contents'>"+contents+"</pre>"+
+          "</div>"+
+      "</div>"
+  )
+  // TODO :: 채팅 스크롤을 하단으로 내리도록 한다.
+  scrollBottom();
+}
+
 // 현재 사용자의 Uid를 가져온다.
 function getCurrentUid(){
     return firebase.auth().getUid();
